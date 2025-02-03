@@ -2,38 +2,30 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    public Sprite itemSprite;
-    public float detectionRadius = 2f;
-    public InventorySystem inventorySystem;
-    private Collider2D playerCollider;
-
-    void Start()
+    public Sprite ItemSprite;
+    public float DetectionRadius = 2f;
+    public InventorySystem InventorySystem;
+    public Collider2D PlayerCollider;
+    public virtual void Init(Collider2D player)
     {
-        playerCollider = FindObjectOfType<PlayerMove>().GetComponent<Collider2D>();
+        PlayerCollider = player;
+        InventorySystem = player.GetComponent<InventorySystem>();
     }
-
-    void Update()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Проверяем расстояние до персонажа
-        if (playerCollider != null && Vector2.Distance(transform.position, playerCollider.transform.position) <= detectionRadius)
+        if(collision == PlayerCollider)
         {
             PickUpItem();
         }
     }
-
-    // Подбор предмета
     private void PickUpItem()
     {
-        if (inventorySystem != null)
+        if (InventorySystem != null)
         {
-            inventorySystem.AddItem(this);
-        }
-        else
-        {
-            Debug.LogError("Инвентарь не найден!");
+            InventorySystem.AddItem(this);
         }
     }
-    public void Destroy()
+    public virtual void Destroy()
     {
         Destroy(gameObject);
     }

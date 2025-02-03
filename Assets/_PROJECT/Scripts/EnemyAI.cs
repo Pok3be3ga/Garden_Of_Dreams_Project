@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
 {
+    [SerializeField] private GameObject _sprite;
     // Ссылка на объект игрока
-    public Transform player;
+    public PlayerMove Player;
 
     // Скорость движения врага
     public float moveSpeed = 3f;
@@ -14,11 +15,20 @@ public class EnemyAI : MonoBehaviour
     // Расстояние, на котором враг останавливается
     public float stopDistance = 1f;
 
+    // Урон, наносимый игроку
+    public float damage = 10f;
+
+    // Интервал между ударами
+    public float attackInterval = 1f;
+
     // Ссылка на компонент Rigidbody2D
     private Rigidbody2D rb;
 
     // Направление взгляда (true = вправо, false = влево)
     private bool facingRight = true;
+
+    // Таймер для атаки
+    private float attackTimer;
 
     void Start()
     {
@@ -29,9 +39,9 @@ public class EnemyAI : MonoBehaviour
     void Update()
     {
         // Проверяем расстояние до игрока
-        if (player != null)
+        if (Player != null)
         {
-            float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+            float distanceToPlayer = Vector2.Distance(transform.position, Player.transform.position);
 
             // Если игрок находится в радиусе обнаружения
             if (distanceToPlayer <= detectionRadius)
@@ -40,11 +50,14 @@ public class EnemyAI : MonoBehaviour
                 if (distanceToPlayer <= stopDistance)
                 {
                     rb.velocity = Vector2.zero;
+
+                    // Атакуем игрока
+                    AttackPlayer();
                 }
                 else
                 {
                     // Вычисляем направление движения
-                    Vector2 direction = (Vector2)(player.position - transform.position).normalized;
+                    Vector2 direction = (Vector2)(Player.transform.position - transform.position).normalized;
 
                     // Двигаем врага в сторону игрока
                     rb.velocity = direction * moveSpeed;
@@ -61,6 +74,25 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    // Метод для атаки игрока
+    private void AttackPlayer()
+    {
+        attackTimer += Time.deltaTime;
+
+        if (attackTimer >= attackInterval)
+        {
+            // Наносим урон игроку
+            HealthSystem playerHealth = Player.GetComponent<HealthSystem>();
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage(damage);
+            }
+
+            // Сбрасываем таймер
+            attackTimer = 0f;
+        }
+    }
+
     // Метод для поворота врага
     private void Flip(float directionX)
     {
@@ -69,17 +101,7 @@ public class EnemyAI : MonoBehaviour
             facingRight = !facingRight;
             Vector3 localScale = transform.localScale;
             localScale.x *= -1; // Инвертируем значение по оси X
-            transform.localScale = localScale;
+            _sprite.transform.localScale = localScale;
         }
-    }
-
-    // Отображение радиусов обнаружения и остановки в редакторе Unity
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, detectionRadius);
-
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, stopDistance);
     }
 }

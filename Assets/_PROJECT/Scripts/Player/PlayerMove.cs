@@ -2,22 +2,21 @@
 
 public class PlayerMove : MonoBehaviour
 {
+    [SerializeField] private GameObject _model;
     // Ссылка на компонент Rigidbody2D
     private Rigidbody2D rb;
-
     // Скорость движения персонажа
     public float moveSpeed = 5f;
-
     // Ссылка на виртуальный джойстик
     public VirtualJoystick virtualJoystick;
-
     // Начальное направление (true = вправо, false = влево)
     private bool facingRight = true;
-
+    public Collider2D Collider2D;
     private void Start()
     {
         // Получаем компонент Rigidbody2D
         rb = GetComponent<Rigidbody2D>();
+        Collider2D = GetComponent<Collider2D>();
     }
 
     private void FixedUpdate()
@@ -32,7 +31,7 @@ public class PlayerMove : MonoBehaviour
         Flip(movement);
     }
 
-    private void Flip(Vector2 movement)
+    public void Flip(Vector2 movement)
     {
         // Проверяем горизонтальную составляющую вектора движения
         if (movement.x > 0 && !facingRight)
@@ -51,8 +50,8 @@ public class PlayerMove : MonoBehaviour
     {
         // Изменяем масштаб по оси X для зеркального отражения спрайта
         facingRight = !facingRight;
-        Vector3 localScale = transform.localScale;
+        Vector3 localScale = _model.transform.localScale;
         localScale.x *= -1; // Инвертируем значение по оси X
-        transform.localScale = localScale;
+        _model.transform.localScale = localScale;
     }
 }

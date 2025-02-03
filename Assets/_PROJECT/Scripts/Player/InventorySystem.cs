@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +13,23 @@ public class InventorySystem : MonoBehaviour
     [SerializeField] private Button[] itemButtons;
     [SerializeField] private Button[] deleteItemButtons;
     [SerializeField] private Sprite defalthSprite;
+    [SerializeField] private int _numberOfBullet;
+    [SerializeField] private TextMeshProUGUI _numberOfBulletText;
 
+    public int CurrentBullet()
+    {
+        return _numberOfBullet;
+    }
+    public void SetBullet()
+    {
+        _numberOfBullet--;
+        _numberOfBulletText.text = _numberOfBullet.ToString();
+    }
+    public void GetBullet(int bullet)
+    {
+        _numberOfBullet += bullet;
+        _numberOfBulletText.text = _numberOfBullet.ToString();
+    }
     // Открыто ли окно инвентаря
     private bool isInventoryOpen = false;
     private void Start()
@@ -55,7 +72,7 @@ public class InventorySystem : MonoBehaviour
         {
             if (i <= items.Length && items[i] != null)
             {
-                slots[i].GetComponent<Image>().sprite = items[i].itemSprite;
+                slots[i].GetComponent<Image>().sprite = items[i].ItemSprite;
                 slots[i].GetComponent<Button>().interactable = true; // Активируем кнопку
             }
             else

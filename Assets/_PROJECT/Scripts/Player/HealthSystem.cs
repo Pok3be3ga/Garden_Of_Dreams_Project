@@ -1,61 +1,48 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class HealthSystem : MonoBehaviour
 {
     // Текущее здоровье
-    public float currentHealth = 100f;
-
+    public float CurrentHealth = 100f;
     // Максимальное здоровье
-    public float maxHealth = 100f;
-
+    public float MaxHealth = 100f;
     // Ссылка на UI-компонент HealthBar
-    public Slider healthBar;
-
-    // Отображение HealthBar над объектом
-    public Transform healthBarTransform;
-
+    public Slider HealthBar;
     void Start()
     {
         // Устанавливаем начальное значение HealthBar
-        if (healthBar != null)
+        if (HealthBar != null)
         {
-            healthBar.maxValue = maxHealth;
-            healthBar.value = currentHealth;
+            HealthBar.maxValue = MaxHealth;
+            HealthBar.value = CurrentHealth;
         }
     }
-
-    // Метод для изменения здоровья
     public void TakeDamage(float damage)
     {
-        currentHealth -= damage;
+        CurrentHealth -= damage;
 
         // Обновляем HealthBar
-        if (healthBar != null)
+        if (HealthBar != null)
         {
-            healthBar.value = currentHealth;
+            HealthBar.value = CurrentHealth;
         }
 
         // Проверяем, жив ли объект
-        if (currentHealth <= 0)
+        if (CurrentHealth <= 0)
         {
             Die();
         }
     }
-
-    // Метод для смерти объекта
-    private void Die()
+    public void TakeHealth(float health)
     {
-        Debug.Log($"{name} погиб!");
-        Destroy(gameObject);
+        CurrentHealth += health;
+        if (CurrentHealth >= MaxHealth) CurrentHealth = MaxHealth;
+    }
+    public virtual void Die()
+    {
+        SceneManager.LoadScene("Game");
     }
 
-    // Обновление позиции HealthBar
-    //void LateUpdate()
-    //{
-    //    if (healthBarTransform != null)
-    //    {
-    //        healthBarTransform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, 1, 0));
-    //    }
-    //}
 }
