@@ -11,6 +11,7 @@ public class BulletsItem : Item
     public override void Destroy()
     {
         base.Destroy();
+        PickUpItem();
         InventorySystem.GetBullet(BulletOfNumber);
     }
 }

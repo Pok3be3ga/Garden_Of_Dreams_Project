@@ -24,7 +24,6 @@ public class PlayerShooting : MonoBehaviour
 
     void Start()
     {
-        _enemies.Add(FindAnyObjectByType<EnemyAI>());
         _shootButton.onClick.AddListener(Shoot);
     }
 
@@ -34,8 +33,14 @@ public class PlayerShooting : MonoBehaviour
         _findTimer += Time.deltaTime;
         FindClosestEnemy();
     }
-
-
+    public void AddEnemy(EnemyAI enemy)
+    {
+        _enemies.Add(enemy);
+    }
+    public void RemoveEnemy(EnemyAI enemy)
+    {
+        _enemies.Remove(enemy);
+    }
     // Метод для поиска ближайшего врага
     private void FindClosestEnemy()
     {

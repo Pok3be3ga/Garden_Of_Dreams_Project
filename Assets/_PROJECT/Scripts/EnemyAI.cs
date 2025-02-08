@@ -30,6 +30,10 @@ public class EnemyAI : MonoBehaviour
     // Таймер для атаки
     private float attackTimer;
 
+    public void Init(PlayerMove player)
+    {
+        Player = player;
+    }
     void Start()
     {
         // Получаем компонент Rigidbody2D
@@ -103,5 +107,9 @@ public class EnemyAI : MonoBehaviour
             localScale.x *= -1; // Инвертируем значение по оси X
             _sprite.transform.localScale = localScale;
         }
+    }
+    public void RemoveEnemy()
+    {
+        Player.GetComponent<PlayerShooting>().RemoveEnemy(this);
     }
 }

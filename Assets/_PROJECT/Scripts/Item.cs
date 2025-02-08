@@ -6,19 +6,18 @@ public class Item : MonoBehaviour
     public float DetectionRadius = 2f;
     public InventorySystem InventorySystem;
     public Collider2D PlayerCollider;
+    private void Update()
+    {
+        float distance = Vector3.Distance(transform.position, PlayerCollider.transform.position);
+        if(distance < DetectionRadius) Destroy();
+    }
     public virtual void Init(Collider2D player)
     {
         PlayerCollider = player;
         InventorySystem = player.GetComponent<InventorySystem>();
     }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if(collision == PlayerCollider)
-        {
-            PickUpItem();
-        }
-    }
-    private void PickUpItem()
+
+    public virtual void PickUpItem()
     {
         if (InventorySystem != null)
         {

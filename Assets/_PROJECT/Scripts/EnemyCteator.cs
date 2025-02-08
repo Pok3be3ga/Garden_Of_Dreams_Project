@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class EnemyCteator : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] private EnemyAI _enemy;
+    [SerializeField] private PlayerMove _player;
+    [SerializeField] private PlayerShooting _playerShooting;
+    [SerializeField] private float _min;
+    [SerializeField] private float _max;
     void Start()
     {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        for (int i = 0; i < 3; i++)
+        {
+            float randomX = Random.Range(_min, _max);
+            float randomZ = Random.Range(_min, _max);
+
+
+            EnemyAI enemy = Instantiate(_enemy, new Vector3(randomX, 0f, randomZ), Quaternion.identity);
+            _enemy.Init(_player);
+            _playerShooting.AddEnemy(enemy);
+        }
     }
 }

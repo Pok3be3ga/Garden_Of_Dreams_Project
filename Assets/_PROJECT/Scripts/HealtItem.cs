@@ -11,7 +11,7 @@ public class HealtItem : Item
     }
     public override void Destroy()
     {
-        base.Destroy();
         PlayerCollider.GetComponent<HealthSystem>().TakeHealth(HealthOfNumber);
+        Destroy(gameObject);
     }
 }
